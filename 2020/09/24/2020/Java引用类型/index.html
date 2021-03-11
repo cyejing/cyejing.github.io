@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="true">
+  <meta name="msvalidate.01" content="true">
+  <meta name="yandex-verification" content="true">
+  <meta name="baidu-site-verification" content="true">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"cyejing.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Java中一共有4种引用类型(其实还有一些其他的引用类型比如FinalReference)：强引用、软引用、弱引用、虚引用。其中强引用就是我们经常使用的Object a &#x3D; new Object(); 这样的形式，在Java中并没有对应的Reference类。 本篇文章主要是分析软引用、弱引用、虚引用的实现，这三种引用类型都是继承于Reference这个类，主要逻辑也在Reference中。 问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java引用类型">
+<meta property="og:url" content="http://cyejing.github.io/2020/09/24/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="CYeJing">
+<meta property="og:description" content="Java中一共有4种引用类型(其实还有一些其他的引用类型比如FinalReference)：强引用、软引用、弱引用、虚引用。其中强引用就是我们经常使用的Object a &#x3D; new Object(); 这样的形式，在Java中并没有对应的Reference类。 本篇文章主要是分析软引用、弱引用、虚引用的实现，这三种引用类型都是继承于Reference这个类，主要逻辑也在Reference中。 问题">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://cyejing.github.io/2020/09/25/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/68747470733a2f2f757365722d676f6c642d63646e2e786974752e696f2f323031382f31312f352f313636653163323462383532333337323f773d35333226683d36323526663d706e6726733d3331333138.png">
+<meta property="article:published_time" content="2020-09-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-27T02:16:35.511Z">
+<meta property="article:author" content="CYeJing">
+<meta property="article:tag" content="Java，转载">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://cyejing.github.io/2020/09/25/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/68747470733a2f2f757365722d676f6c642d63646e2e786974752e696f2f323031382f31312f352f313636653163323462383532333337323f773d35333226683d36323526663d706e6726733d3331333138.png">
+
+<link rel="canonical" href="http://cyejing.github.io/2020/09/24/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java引用类型 | CYeJing</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-102322008-1"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-102322008-1');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">CYeJing</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">CYeJing</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-game">
+
+    <a href="/game" rel="section"><i class="fa fa-gamepad fa-fw"></i>game</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://cyejing.github.io/2020/09/24/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="CYeJing">
+      <meta itemprop="description" content="CYeJing">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="CYeJing">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java引用类型
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-09-25T00:00:00+08:00">2020-09-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-27 10:16:35" itemprop="dateModified" datetime="2020-12-27T10:16:35+08:00">2020-12-27</time>
+              </span>
+
+          
+            <span id="/2020/09/24/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/" class="post-meta-item leancloud_visitors" data-flag-title="Java引用类型" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/09/24/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/09/24/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>Java中一共有4种引用类型(其实还有一些其他的引用类型比如FinalReference)：强引用、软引用、弱引用、虚引用。其中强引用就是我们经常使用的<code>Object a = new Object();</code> 这样的形式，在Java中并没有对应的Reference类。</p>
+<p>本篇文章主要是分析软引用、弱引用、虚引用的实现，这三种引用类型都是继承于Reference这个类，主要逻辑也在Reference中。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>在分析前，先抛几个问题？</p>
+<p>1.网上大多数文章对于软引用的介绍是：在内存不足的时候才会被回收，那内存不足是怎么定义的？什么才叫内存不足？</p>
+<p>2.网上大多数文章对于虚引用的介绍是：形同虚设，虚引用并不会决定对象的生命周期。主要用来跟踪对象被垃圾回收器回收的活动。真的是这样吗？</p>
+<p>3.虚引用在Jdk中有哪些场景下用到了呢？</p>
+<a id="more"></a>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p>我们先看下<code>Reference.java</code>中的几个字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public abstract class Reference&lt;T&gt; &#123;</span><br><span class="line">    &#x2F;&#x2F;引用的对象</span><br><span class="line">    private T referent;        </span><br><span class="line">	&#x2F;&#x2F;回收队列，由使用者在Reference的构造函数中指定</span><br><span class="line">    volatile ReferenceQueue&lt;? super T&gt; queue;</span><br><span class="line"> 	&#x2F;&#x2F;当该引用被加入到queue中的时候，该字段被设置为queue中的下一个元素，以形成链表结构</span><br><span class="line">    volatile Reference next;</span><br><span class="line">    &#x2F;&#x2F;在GC时，JVM底层会维护一个叫DiscoveredList的链表，存放的是Reference对象，discovered字段指向的就是链表中的下一个元素，由JVM设置</span><br><span class="line">    transient private Reference&lt;T&gt; discovered;  </span><br><span class="line">	&#x2F;&#x2F;进行线程同步的锁对象</span><br><span class="line">    static private class Lock &#123; &#125;</span><br><span class="line">    private static Lock lock &#x3D; new Lock();</span><br><span class="line">	&#x2F;&#x2F;等待加入queue的Reference对象，在GC时由JVM设置，会有一个java层的线程(ReferenceHandler)源源不断的从pending中提取元素加入到queue</span><br><span class="line">    private static Reference&lt;Object&gt; pending &#x3D; null;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个Reference对象的生命周期如下：</p>
+<img src="/2020/09/25/2020/Java%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B/68747470733a2f2f757365722d676f6c642d63646e2e786974752e696f2f323031382f31312f352f313636653163323462383532333337323f773d35333226683d36323526663d706e6726733d3331333138.png" class="">
+
+<p>主要分为Native层和Java层两个部分。</p>
+<p>Native层在GC时将需要被回收的Reference对象加入到DiscoveredList中（代码在<code>referenceProcessor.cpp</code>中<code>process_discovered_references</code>方法），然后将DiscoveredList的元素移动到PendingList中（代码在<code>referenceProcessor.cpp</code>中<code>enqueue_discovered_ref_helper</code>方法）,PendingList的队首就是Reference类中的pending对象。 具体代码就不分析了，有兴趣的同学可以看看这篇<a target="_blank" rel="noopener" href="http://www.importnew.com/21628.html">文章</a>。</p>
+<p>看看Java层的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">private static class ReferenceHandler extends Thread &#123;</span><br><span class="line">     	...</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                tryHandlePending(true);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">  &#125; </span><br><span class="line">static boolean tryHandlePending(boolean waitForNotify) &#123;</span><br><span class="line">        Reference&lt;Object&gt; r;</span><br><span class="line">        Cleaner c;</span><br><span class="line">        try &#123;</span><br><span class="line">            synchronized (lock) &#123;</span><br><span class="line">                if (pending !&#x3D; null) &#123;</span><br><span class="line">                    r &#x3D; pending;</span><br><span class="line">                 	&#x2F;&#x2F;如果是Cleaner对象，则记录下来，下面做特殊处理</span><br><span class="line">                    c &#x3D; r instanceof Cleaner ? (Cleaner) r : null;</span><br><span class="line">                    &#x2F;&#x2F;指向PendingList的下一个对象</span><br><span class="line">                    pending &#x3D; r.discovered;</span><br><span class="line">                    r.discovered &#x3D; null;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                   &#x2F;&#x2F;如果pending为null就先等待，当有对象加入到PendingList中时，jvm会执行notify</span><br><span class="line">                    if (waitForNotify) &#123;</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125;</span><br><span class="line">                    &#x2F;&#x2F; retry if waited</span><br><span class="line">                    return waitForNotify;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; </span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; 如果时CLeaner对象，则调用clean方法进行资源回收</span><br><span class="line">        if (c !&#x3D; null) &#123;</span><br><span class="line">            c.clean();</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">		&#x2F;&#x2F;将Reference加入到ReferenceQueue，开发者可以通过从ReferenceQueue中poll元素感知到对象被回收的事件。</span><br><span class="line">        ReferenceQueue&lt;? super Object&gt; q &#x3D; r.queue;</span><br><span class="line">        if (q !&#x3D; ReferenceQueue.NULL) q.enqueue(r);</span><br><span class="line">        return true;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>流程比较简单：就是源源不断的从PendingList中提取出元素，然后将其加入到ReferenceQueue中去，开发者可以通过从ReferenceQueue中poll元素感知到对象被回收的事件。</p>
+<p>另外需要注意的是，对于Cleaner类型（继承自虚引用）的对象会有额外的处理：在其指向的对象被回收时，会调用clean方法，该方法主要是用来做对应的资源回收，<strong>在堆外内存DirectByteBuffer中就是用Cleaner进行堆外内存的回收，这也是虚引用在java中的典型应用。</strong></p>
+<p>看完了Reference的实现，再看看几个实现类里，各自有什么不同。</p>
+<h4 id="SoftReference"><a href="#SoftReference" class="headerlink" title="SoftReference"></a>SoftReference</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class SoftReference&lt;T&gt; extends Reference&lt;T&gt; &#123;</span><br><span class="line">    </span><br><span class="line">    static private long clock;</span><br><span class="line">    </span><br><span class="line">    private long timestamp;</span><br><span class="line">   </span><br><span class="line">    public SoftReference(T referent) &#123;</span><br><span class="line">        super(referent);</span><br><span class="line">        this.timestamp &#x3D; clock;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public SoftReference(T referent, ReferenceQueue&lt;? super T&gt; q) &#123;</span><br><span class="line">        super(referent, q);</span><br><span class="line">        this.timestamp &#x3D; clock;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public T get() &#123;</span><br><span class="line">        T o &#x3D; super.get();</span><br><span class="line">        if (o !&#x3D; null &amp;&amp; this.timestamp !&#x3D; clock)</span><br><span class="line">            this.timestamp &#x3D; clock;</span><br><span class="line">        return o;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>软引用的实现很简单，就多了两个字段：<code>clock</code>和<code>timestamp</code>。<code>clock</code>是个静态变量，每次GC时都会将该字段设置成当前时间。<code>timestamp</code>字段则会在每次调用get方法时将其赋值为<code>clock</code>（如果不相等且对象没被回收）。</p>
+<p>那这两个字段的作用是什么呢？这和软引用在内存不够的时候才被回收，又有什么关系呢？</p>
+<p>这些还得看JVM的源码才行，因为决定对象是否需要被回收都是在GC中实现的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">ReferenceProcessor::process_discovered_reflist(</span><br><span class="line">  DiscoveredList               refs_lists[],</span><br><span class="line">  ReferencePolicy*             policy,</span><br><span class="line">  bool                         clear_referent,</span><br><span class="line">  BoolObjectClosure*           is_alive,</span><br><span class="line">  OopClosure*                  keep_alive,</span><br><span class="line">  VoidClosure*                 complete_gc,</span><br><span class="line">  AbstractRefProcTaskExecutor* task_executor)</span><br><span class="line">&#123;</span><br><span class="line"> ...</span><br><span class="line">   &#x2F;&#x2F;还记得上文提到过的DiscoveredList吗?refs_lists就是DiscoveredList。</span><br><span class="line">   &#x2F;&#x2F;对于DiscoveredList的处理分为几个阶段，SoftReference的处理就在第一阶段</span><br><span class="line"> ...</span><br><span class="line">      for (uint i &#x3D; 0; i &lt; _max_num_q; i++) &#123;</span><br><span class="line">        process_phase1(refs_lists[i], policy,</span><br><span class="line">                       is_alive, keep_alive, complete_gc);</span><br><span class="line">      &#125;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;该阶段的主要目的就是当内存足够时，将对应的SoftReference从refs_list中移除。</span><br><span class="line">void</span><br><span class="line">ReferenceProcessor::process_phase1(DiscoveredList&amp;    refs_list,</span><br><span class="line">                                   ReferencePolicy*   policy,</span><br><span class="line">                                   BoolObjectClosure* is_alive,</span><br><span class="line">                                   OopClosure*        keep_alive,</span><br><span class="line">                                   VoidClosure*       complete_gc) &#123;</span><br><span class="line">  </span><br><span class="line">  DiscoveredListIterator iter(refs_list, keep_alive, is_alive);</span><br><span class="line">  &#x2F;&#x2F; Decide which softly reachable refs should be kept alive.</span><br><span class="line">  while (iter.has_next()) &#123;</span><br><span class="line">    iter.load_ptrs(DEBUG_ONLY(!discovery_is_atomic() &#x2F;* allow_null_referent *&#x2F;));</span><br><span class="line">    &#x2F;&#x2F;判断引用的对象是否存活</span><br><span class="line">    bool referent_is_dead &#x3D; (iter.referent() !&#x3D; NULL) &amp;&amp; !iter.is_referent_alive();</span><br><span class="line">    &#x2F;&#x2F;如果引用的对象已经不存活了，则会去调用对应的ReferencePolicy判断该对象是不时要被回收</span><br><span class="line">    if (referent_is_dead &amp;&amp;</span><br><span class="line">        !policy-&gt;should_clear_reference(iter.obj(), _soft_ref_timestamp_clock)) &#123;</span><br><span class="line">      if (TraceReferenceGC) &#123;</span><br><span class="line">        gclog_or_tty-&gt;print_cr(&quot;Dropping reference (&quot; INTPTR_FORMAT &quot;: %s&quot;  &quot;) by policy&quot;,</span><br><span class="line">                               (void *)iter.obj(), iter.obj()-&gt;klass()-&gt;internal_name());</span><br><span class="line">      &#125;</span><br><span class="line">      &#x2F;&#x2F; Remove Reference object from list</span><br><span class="line">      iter.remove();</span><br><span class="line">      &#x2F;&#x2F; Make the Reference object active again</span><br><span class="line">      iter.make_active();</span><br><span class="line">      &#x2F;&#x2F; keep the referent around</span><br><span class="line">      iter.make_referent_alive();</span><br><span class="line">      iter.move_to_next();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      iter.next();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>refs_lists</code>中存放了本次GC发现的某种引用类型（虚引用、软引用、弱引用等），而<code>process_discovered_reflist</code>方法的作用就是将不需要被回收的对象从<code>refs_lists</code>移除掉，<code>refs_lists</code>最后剩下的元素全是需要被回收的元素，最后会将其第一个元素赋值给上文提到过的<code>Reference.java#pending</code>字段。</p>
+<p>ReferencePolicy一共有4种实现：NeverClearPolicy，AlwaysClearPolicy，LRUCurrentHeapPolicy，LRUMaxHeapPolicy。其中NeverClearPolicy永远返回false，代表永远不回收SoftReference，在JVM中该类没有被使用，AlwaysClearPolicy则永远返回true，在<code>referenceProcessor.hpp#setup</code>方法中中可以设置policy为AlwaysClearPolicy，至于什么时候会用到AlwaysClearPolicy，大家有兴趣可以自行研究。</p>
+<p>LRUCurrentHeapPolicy和LRUMaxHeapPolicy的should_clear_reference方法则是完全相同：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">bool LRUMaxHeapPolicy::should_clear_reference(oop p,</span><br><span class="line">                                             jlong timestamp_clock) &#123;</span><br><span class="line">  jlong interval &#x3D; timestamp_clock - java_lang_ref_SoftReference::timestamp(p);</span><br><span class="line">  assert(interval &gt;&#x3D; 0, &quot;Sanity check&quot;);</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; The interval will be zero if the ref was accessed since the last scavenge&#x2F;gc.</span><br><span class="line">  if(interval &lt;&#x3D; _max_interval) &#123;</span><br><span class="line">    return false;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>timestamp_clock</code>就是SoftReference的静态字段<code>clock</code>，<code>java_lang_ref_SoftReference::timestamp(p)</code>对应是字段<code>timestamp</code>。如果上次GC后有调用<code>SoftReference#get</code>，<code>interval</code>值为0，否则为若干次GC之间的时间差。</p>
+<p><code>_max_interval</code>则代表了一个临界值，它的值在LRUCurrentHeapPolicy和LRUMaxHeapPolicy两种策略中有差异。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void LRUCurrentHeapPolicy::setup() &#123;</span><br><span class="line">  _max_interval &#x3D; (Universe::get_heap_free_at_last_gc() &#x2F; M) * SoftRefLRUPolicyMSPerMB;</span><br><span class="line">  assert(_max_interval &gt;&#x3D; 0,&quot;Sanity check&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void LRUMaxHeapPolicy::setup() &#123;</span><br><span class="line">  size_t max_heap &#x3D; MaxHeapSize;</span><br><span class="line">  max_heap -&#x3D; Universe::get_heap_used_at_last_gc();</span><br><span class="line">  max_heap &#x2F;&#x3D; M;</span><br><span class="line"></span><br><span class="line">  _max_interval &#x3D; max_heap * SoftRefLRUPolicyMSPerMB;</span><br><span class="line">  assert(_max_interval &gt;&#x3D; 0,&quot;Sanity check&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>SoftRefLRUPolicyMSPerMB</code>默认为1000，前者的计算方法和上次GC后可用堆大小有关，后者计算方法和（堆大小-上次gc时堆使用大小）有关。</p>
+<p>看到这里你就知道SoftReference到底什么时候被被回收了，它和使用的策略（默认应该是LRUCurrentHeapPolicy），堆可用大小，该SoftReference上一次调用get方法的时间都有关系。</p>
+<h3 id="WeakReference"><a href="#WeakReference" class="headerlink" title="WeakReference"></a>WeakReference</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class WeakReference&lt;T&gt; extends Reference&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    public WeakReference(T referent) &#123;</span><br><span class="line">        super(referent);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public WeakReference(T referent, ReferenceQueue&lt;? super T&gt; q) &#123;</span><br><span class="line">        super(referent, q);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到WeakReference在Java层只是继承了Reference，没有做任何的改动。那referent字段是什么时候被置为null的呢？要搞清楚这个问题我们再看下上文提到过的<code>process_discovered_reflist</code>方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">size_t</span><br><span class="line">ReferenceProcessor::process_discovered_reflist(</span><br><span class="line">  DiscoveredList               refs_lists[],</span><br><span class="line">  ReferencePolicy*             policy,</span><br><span class="line">  bool                         clear_referent,</span><br><span class="line">  BoolObjectClosure*           is_alive,</span><br><span class="line">  OopClosure*                  keep_alive,</span><br><span class="line">  VoidClosure*                 complete_gc,</span><br><span class="line">  AbstractRefProcTaskExecutor* task_executor)</span><br><span class="line">&#123;</span><br><span class="line"> ...</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F;Phase 1:将所有不存活但是还不能被回收的软引用从refs_lists中移除（只有refs_lists为软引用的时候，这里policy才不为null）</span><br><span class="line">  if (policy !&#x3D; NULL) &#123;</span><br><span class="line">    if (mt_processing) &#123;</span><br><span class="line">      RefProcPhase1Task phase1(*this, refs_lists, policy, true &#x2F;*marks_oops_alive*&#x2F;);</span><br><span class="line">      task_executor-&gt;execute(phase1);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      for (uint i &#x3D; 0; i &lt; _max_num_q; i++) &#123;</span><br><span class="line">        process_phase1(refs_lists[i], policy,</span><br><span class="line">                       is_alive, keep_alive, complete_gc);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; else &#123; &#x2F;&#x2F; policy &#x3D;&#x3D; NULL</span><br><span class="line">    assert(refs_lists !&#x3D; _discoveredSoftRefs,</span><br><span class="line">           &quot;Policy must be specified for soft references.&quot;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Phase 2:</span><br><span class="line">  &#x2F;&#x2F; 移除所有指向对象还存活的引用</span><br><span class="line">  if (mt_processing) &#123;</span><br><span class="line">    RefProcPhase2Task phase2(*this, refs_lists, !discovery_is_atomic() &#x2F;*marks_oops_alive*&#x2F;);</span><br><span class="line">    task_executor-&gt;execute(phase2);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; _max_num_q; i++) &#123;</span><br><span class="line">      process_phase2(refs_lists[i], is_alive, keep_alive, complete_gc);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Phase 3:</span><br><span class="line">  &#x2F;&#x2F; 根据clear_referent的值决定是否将不存活对象回收</span><br><span class="line">  if (mt_processing) &#123;</span><br><span class="line">    RefProcPhase3Task phase3(*this, refs_lists, clear_referent, true &#x2F;*marks_oops_alive*&#x2F;);</span><br><span class="line">    task_executor-&gt;execute(phase3);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; _max_num_q; i++) &#123;</span><br><span class="line">      process_phase3(refs_lists[i], clear_referent,</span><br><span class="line">                     is_alive, keep_alive, complete_gc);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return total_list_count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void</span><br><span class="line">ReferenceProcessor::process_phase3(DiscoveredList&amp;    refs_list,</span><br><span class="line">                                   bool               clear_referent,</span><br><span class="line">                                   BoolObjectClosure* is_alive,</span><br><span class="line">                                   OopClosure*        keep_alive,</span><br><span class="line">                                   VoidClosure*       complete_gc) &#123;</span><br><span class="line">  ResourceMark rm;</span><br><span class="line">  DiscoveredListIterator iter(refs_list, keep_alive, is_alive);</span><br><span class="line">  while (iter.has_next()) &#123;</span><br><span class="line">    iter.update_discovered();</span><br><span class="line">    iter.load_ptrs(DEBUG_ONLY(false &#x2F;* allow_null_referent *&#x2F;));</span><br><span class="line">    if (clear_referent) &#123;</span><br><span class="line">      &#x2F;&#x2F; NULL out referent pointer</span><br><span class="line">      &#x2F;&#x2F;将Reference的referent字段置为null，之后会被GC回收</span><br><span class="line">      iter.clear_referent();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      &#x2F;&#x2F; keep the referent around</span><br><span class="line">      &#x2F;&#x2F;标记引用的对象为存活，该对象在这次GC将不会被回收</span><br><span class="line">      iter.make_referent_alive();</span><br><span class="line">    &#125;</span><br><span class="line">	...</span><br><span class="line">  &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不管是弱引用还是其他引用类型，将字段referent置null的操作都发生在<code>process_phase3</code>中，而具体行为是由<code>clear_referent</code>的值决定的。而<code>clear_referent</code>的值则和引用类型相关。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">ReferenceProcessorStats ReferenceProcessor::process_discovered_references(</span><br><span class="line">  BoolObjectClosure*           is_alive,</span><br><span class="line">  OopClosure*                  keep_alive,</span><br><span class="line">  VoidClosure*                 complete_gc,</span><br><span class="line">  AbstractRefProcTaskExecutor* task_executor,</span><br><span class="line">  GCTimer*                     gc_timer) &#123;</span><br><span class="line">  NOT_PRODUCT(verify_ok_to_handle_reflists());</span><br><span class="line">	...</span><br><span class="line">  &#x2F;&#x2F;process_discovered_reflist方法的第3个字段就是clear_referent</span><br><span class="line">  &#x2F;&#x2F; Soft references</span><br><span class="line">  size_t soft_count &#x3D; 0;</span><br><span class="line">  &#123;</span><br><span class="line">    GCTraceTime tt(&quot;SoftReference&quot;, trace_time, false, gc_timer);</span><br><span class="line">    soft_count &#x3D;</span><br><span class="line">      process_discovered_reflist(_discoveredSoftRefs, _current_soft_ref_policy, true,</span><br><span class="line">                                 is_alive, keep_alive, complete_gc, task_executor);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  update_soft_ref_master_clock();</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Weak references</span><br><span class="line">  size_t weak_count &#x3D; 0;</span><br><span class="line">  &#123;</span><br><span class="line">    GCTraceTime tt(&quot;WeakReference&quot;, trace_time, false, gc_timer);</span><br><span class="line">    weak_count &#x3D;</span><br><span class="line">      process_discovered_reflist(_discoveredWeakRefs, NULL, true,</span><br><span class="line">                                 is_alive, keep_alive, complete_gc, task_executor);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Final references</span><br><span class="line">  size_t final_count &#x3D; 0;</span><br><span class="line">  &#123;</span><br><span class="line">    GCTraceTime tt(&quot;FinalReference&quot;, trace_time, false, gc_timer);</span><br><span class="line">    final_count &#x3D;</span><br><span class="line">      process_discovered_reflist(_discoveredFinalRefs, NULL, false,</span><br><span class="line">                                 is_alive, keep_alive, complete_gc, task_executor);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Phantom references</span><br><span class="line">  size_t phantom_count &#x3D; 0;</span><br><span class="line">  &#123;</span><br><span class="line">    GCTraceTime tt(&quot;PhantomReference&quot;, trace_time, false, gc_timer);</span><br><span class="line">    phantom_count &#x3D;</span><br><span class="line">      process_discovered_reflist(_discoveredPhantomRefs, NULL, false,</span><br><span class="line">                                 is_alive, keep_alive, complete_gc, task_executor);</span><br><span class="line">  &#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，对于Soft references和Weak references <code>clear_referent</code>字段传入的都是true，这也符合我们的预期：对象不可达后，引用字段就会被置为null，然后对象就会被回收（对于软引用来说，如果内存足够的话，在Phase 1，相关的引用就会从refs_list中被移除，到Phase 3时refs_list为空集合）。</p>
+<p>但对于Final references和 Phantom references，<code>clear_referent</code>字段传入的是false，也就意味着被这两种引用类型引用的对象，<strong>如果没有其他额外处理，只要Reference对象还存活，那引用的对象是不会被回收的</strong>。Final references和对象是否重写了finalize方法有关，不在本文分析范围之内，我们接下来看看Phantom references。</p>
+<h4 id="PhantomReference"><a href="#PhantomReference" class="headerlink" title="PhantomReference"></a>PhantomReference</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class PhantomReference&lt;T&gt; extends Reference&lt;T&gt; &#123;</span><br><span class="line"> </span><br><span class="line">    public T get() &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public PhantomReference(T referent, ReferenceQueue&lt;? super T&gt; q) &#123;</span><br><span class="line">        super(referent, q);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到虚引用的get方法永远返回null，我们看个demo。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public static void demo() throws InterruptedException &#123;</span><br><span class="line">       Object obj &#x3D; new Object();</span><br><span class="line">       ReferenceQueue&lt;Object&gt; refQueue &#x3D;new ReferenceQueue&lt;&gt;();</span><br><span class="line">       PhantomReference&lt;Object&gt; phanRef &#x3D;new PhantomReference&lt;&gt;(obj, refQueue);</span><br><span class="line"></span><br><span class="line">       Object objg &#x3D; phanRef.get();</span><br><span class="line">       &#x2F;&#x2F;这里拿到的是null</span><br><span class="line">       System.out.println(objg);</span><br><span class="line">       &#x2F;&#x2F;让obj变成垃圾</span><br><span class="line">       obj&#x3D;null;</span><br><span class="line">       System.gc();</span><br><span class="line">       Thread.sleep(3000);</span><br><span class="line">	&#x2F;&#x2F;gc后会将phanRef加入到refQueue中</span><br><span class="line">       Reference&lt;? extends Object&gt; phanRefP &#x3D; refQueue.remove();</span><br><span class="line">    	&#x2F;&#x2F;这里输出true</span><br><span class="line">       System.out.println(phanRefP&#x3D;&#x3D;phanRef);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>从以上代码中可以看到，虚引用能够在指向对象不可达时得到一个’通知’（其实所有继承References的类都有这个功能），需要注意的是GC完成后，<strong>phanRef.referent依然指向之前创建Object，也就是说Object对象一直没被回收！</strong></p>
+<p>而造成这一现象的原因在上一小节末尾已经说了：<code>对于Final references和 Phantom references，</code>clear_referent<code>字段传入的时false，也就意味着被这两种引用类型引用的对象，如果没有其他额外处理，在GC中是不会被回收的。</code></p>
+<p>对于虚引用来说，从<code>refQueue.remove();</code>得到引用对象后，可以调用<code>clear</code>方法强行解除引用和对象之间的关系，使得对象下次可以GC时可以被回收掉。</p>
+<h3 id="End"><a href="#End" class="headerlink" title="End"></a>End</h3><p>针对文章开头提出的几个问题，看完分析，我们已经能给出回答：</p>
+<p>1.我们经常在网上看到软引用的介绍是：在内存不足的时候才会回收，那内存不足是怎么定义的？为什么才叫内存不足？</p>
+<p><strong>软引用会在内存不足时被回收，内存不足的定义和该引用对象get的时间以及当前堆可用内存大小都有关系，计算公式在上文中也已经给出。</strong></p>
+<p>2.网上对于虚引用的介绍是：形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。主要用来跟踪对象被垃圾回收器回收的活动。真的是这样吗？</p>
+<p><strong>严格的说，虚引用是会影响对象生命周期的，如果不做任何处理，只要虚引用不被回收，那其引用的对象永远不会被回收。所以一般来说，从ReferenceQueue中获得PhantomReference对象后，如果PhantomReference对象不会被回收的话（比如被其他GC ROOT可达的对象引用），需要调用<code>clear</code>方法解除PhantomReference和其引用对象的引用关系。</strong></p>
+<p>3.虚引用在Jdk中有哪些场景下用到了呢？</p>
+<p><strong>DirectByteBuffer中是用虚引用的子类<code>Cleaner.java</code>来实现堆外内存回收的，后续会写篇文章来说说堆外内存的里里外外。</strong></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><strong>软引用SoftReference</strong>，回收的时间在发生GC的时候，会根据策略计算Get的时间和堆可用内存大小得到是否要回收</p>
+<p><strong>弱引用WeakReference</strong>，回收的时间在发生GC的时候，如果对象没有其他地方再引用就会被回收</p>
+<p><strong>虚引用PhantomReference</strong>，当引用的对象被回收的时候做系统通知处理，如DirectByteBuffer的堆外内存回收</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java%EF%BC%8C%E8%BD%AC%E8%BD%BD/" rel="tag"># Java，转载</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/07/09/2020/Netty%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E8%A7%A3%E6%9E%90/" rel="prev" title="Netty源码解析-启动流程解析">
+      <i class="fa fa-chevron-left"></i> Netty源码解析-启动流程解析
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/09/24/2020/DirectByteBuffer%E8%A7%A3%E6%9E%90/" rel="next" title="DirectByteBuffer解析">
+      DirectByteBuffer解析 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">2.</span> <span class="nav-text">Reference</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SoftReference"><span class="nav-number">2.1.</span> <span class="nav-text">SoftReference</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WeakReference"><span class="nav-number">3.</span> <span class="nav-text">WeakReference</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PhantomReference"><span class="nav-number">3.1.</span> <span class="nav-text">PhantomReference</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#End"><span class="nav-number">4.</span> <span class="nav-text">End</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">CYeJing</p>
+  <div class="site-description" itemprop="description">CYeJing</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/cyejing" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;cyejing" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:jing23501@gmail.com" title="E-Mail → mailto:jing23501@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">CYeJing</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'P34mIQbLs2DEH6mulscdmNhe-gzGzoHsz',
+      appKey     : 'pb0EYM6Q42viLeUFGxKyQY1M',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
