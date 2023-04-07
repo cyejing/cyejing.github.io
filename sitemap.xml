@@ -7,13 +7,53 @@
         <loc>https://cyejing.cn/about/</loc>
     </url>
     <url>
+        <loc>https://cyejing.cn/categories/</loc>
+    </url>
+    <url>
         <loc>https://cyejing.cn/posts/</loc>
     </url>
     <url>
-        <loc>https://cyejing.cn/posts/i/</loc>
+        <loc>https://cyejing.cn/posts/ce-shi/</loc>
+        <lastmod>2020-10-14</lastmod>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/posts/code-test/</loc>
         <lastmod>2020-10-13</lastmod>
     </url>
     <url>
+        <loc>https://cyejing.cn/posts/good-first-post/</loc>
+        <lastmod>2019-08-23</lastmod>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/posts/later-posts/</loc>
+        <lastmod>2019-08-25</lastmod>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/posts/typography/</loc>
+        <lastmod>2018-09-29T11:36:33+08:00</lastmod>
+    </url>
+    <url>
         <loc>https://cyejing.cn/tags/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/blog/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/code/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/first/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/hello/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/later/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/original-post/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/test/</loc>
     </url>
 </urlset>

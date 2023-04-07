@@ -88,7 +88,7 @@ if (header !== null) {
   window.addEventListener(
     'scroll',
     throttle(() => {
-      autoHideHeader();
+      // autoHideHeader();
 
       if (mobileMenuVisible == true) {
         toggleMobileMenu();
