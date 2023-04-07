@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://cyejing.cn/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/about/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/posts/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/posts/i/</loc>
+        <lastmod>2020-10-13</lastmod>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/</loc>
+    </url>
+</urlset>

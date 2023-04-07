@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Cyejing</title>
+      <link>https://cyejing.cn</link>
+      <description>Cyejing blog</description>
+      <generator>Zola</generator>
+      <language>zh</language>
+      <atom:link href="https://cyejing.cn/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Tue, 13 Oct 2020 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Test code syntax highlight</title>
+          <pubDate>Tue, 13 Oct 2020 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://cyejing.cn/posts/i/</link>
+          <guid>https://cyejing.cn/posts/i/</guid>
+          <description>&lt;pre data-lang=&quot;rust&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;fn factorial(n: u64) -&amp;gt; u64 {
+    match n {
+        0 =&amp;gt; 1,
+        _ =&amp;gt; n * factorial(n-1)
+    }
+}
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;pre data-lang=&quot;typescript&quot; class=&quot;language-typescript &quot;&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;const sum = (n: number) =&amp;gt;  n * (n + 1) &amp;#x2F; 2
+&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</description>
+      </item>
+    </channel>
+</rss>
