@@ -62,6 +62,8 @@ extra_syntaxes = []
 # will be accessible in all templates
 [extra]
 
+disable_comments = true
+
 home_subtitle = "Some profound and catchy statement"
 
 # footer_copyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
@@ -97,8 +99,8 @@ shortname = "my-supa-dupa-blog"
 
 
 [extra.author]
-name = "The Author"
-email = "author@domain.com"
+name = "Cyejing"
+email = "jing23501@qq.com"
 
 [extra.google_analytics]
 enable = false
