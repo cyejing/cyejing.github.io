@@ -36,7 +36,7 @@ feed_filename = "rss.xml"
 
 taxonomies = [
     {name = "tags", rss = true},
-    {name = "categories", paginate_by = 5},  # 5 items per page for a term
+    # {name = "categories", paginate_by = 5},  # 5 items per page for a term
 ]
 
 # Whether to compile the Sass files found in the `sass` directory
@@ -72,7 +72,7 @@ footer_copyright = ''
 
 hermit_menu = [
     { link = "/posts", name = "Posts" },
-    { link = "/about", name = "About" }
+    { link = "/tags", name = "Tags" },
 ]
 
 hermit_social = [
