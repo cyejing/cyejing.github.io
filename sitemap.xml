@@ -4,9 +4,6 @@
         <loc>https://cyejing.cn/</loc>
     </url>
     <url>
-        <loc>https://cyejing.cn/about/</loc>
-    </url>
-    <url>
         <loc>https://cyejing.cn/blog/</loc>
     </url>
     <url>
@@ -15,10 +12,6 @@
     <url>
         <loc>https://cyejing.cn/posts/ce-shi/</loc>
         <lastmod>2020-10-14</lastmod>
-    </url>
-    <url>
-        <loc>https://cyejing.cn/posts/code-test/</loc>
-        <lastmod>2020-10-13</lastmod>
     </url>
     <url>
         <loc>https://cyejing.cn/posts/good-first-post/</loc>
@@ -37,9 +30,6 @@
     </url>
     <url>
         <loc>https://cyejing.cn/tags/blog/</loc>
-    </url>
-    <url>
-        <loc>https://cyejing.cn/tags/code/</loc>
     </url>
     <url>
         <loc>https://cyejing.cn/tags/first/</loc>
