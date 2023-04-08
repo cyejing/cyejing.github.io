@@ -1,40 +1,26 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <meta itemprop="name" content="Cyejing" />
-  <meta itemprop="description" content="Cyejing blog" />
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta itemprop="name" content="Cyejing" />
+    <meta itemprop="description" content="Cyejing blog" />
 
-  <link
-    rel="apple-touch-icon"
-    sizes="180x180"
-    href="https://cyejing.cn/apple-touch-icon.png"
-  />
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="32x32"
-    href="https://cyejing.cn/favicon-32x32.png"
-  />
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="16x16"
-    href="https://cyejing.cn/favicon-16x16.png"
-  />
-  <link rel="shortcut icon" href="https://cyejing.cn/favicon.ico" />
-  <link rel="stylesheet" href="https://cyejing.cn/style.css" />
-  
-  <title>About</title>
-   
-  <link
-    rel="alternate"
-    type="application/rss+xml"
-    title="RSS"
-    href="https://cyejing.cn/rss.xml"
-  />
-  
+    <link rel="stylesheet" href="https://cyejing.cn/style.css" />
+    
+    <title>About</title>
+    
+    <!-- feed -->
+    
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="RSS"
+      href="https://cyejing.cn/rss.xml"
+    />
+    
+  </head>
 
   <body id="page">
     
@@ -49,7 +35,7 @@
         
         <a href="https://cyejing.cn/posts">Posts</a>
         
-        <a href="https://cyejing.cn/about">About</a>
+        <a href="https://cyejing.cn/tags">Tags</a>
         
       </nav>
     </div>
@@ -106,14 +92,15 @@
     
     <li><a href="https://cyejing.cn/posts">Posts</a></li>
     
-    <li><a href="https://cyejing.cn/about">About</a></li>
+    <li><a href="https://cyejing.cn/tags">Tags</a></li>
     
   </ul>
 </div>
 
+    <!-- title -->
     
 
-                
+        <!-- main -->
         
 <main class="site-main section-inner animated fadeIn faster">
   <article class="thin">
@@ -204,23 +191,29 @@
     <script src="https://unpkg.com/highlightjs-badge/highlightjs/highlight.pack.js"></script>
     <script src="https://unpkg.com/highlightjs-badge/highlightjs-badge.min.js"></script>
     <script>
-      var pres = document.querySelectorAll("pre>code");
+      var pres = document.querySelectorAll('pre>code')
       for (var i = 0; i < pres.length; i++) {
-        hljs.highlightBlock(pres[i]);
+        hljs.highlightBlock(pres[i])
       }
     </script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
     <script>
       var options = {
-        copyIconClass: "gg-clipboard",
-        checkIconClass: "gg-check",
-      };
-      window.highlightJsBadge(options);
+        copyIconClass: 'gg-clipboard',
+        checkIconClass: 'gg-check'
+      }
+      window.highlightJsBadge(options)
     </script>
-      
+    
+    <!-- clipboard -->
+    
+    <!-- highlightjs -->
+    
     <script src="https://cyejing.cn/js/main.js"></script>
 
-      
+     
+    <!-- google_analytics -->
+    
   </body>
 </html>
