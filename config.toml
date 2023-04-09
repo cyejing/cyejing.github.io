@@ -70,7 +70,7 @@ highlight_code = true
 
 disable_comments = true
 
-home_subtitle = "Some profound and catchy statement"
+home_subtitle = "welcome to my blog"
 
 # footer_copyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
 footer_copyright = ''
