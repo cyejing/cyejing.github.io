@@ -1,7 +1,7 @@
 +++
 title = "template"
 date = 2018-09-29T11:36:33+08:00
-draft = false
+draft = true
 [taxonomies]
 tags=["test", "original_post"]
 [extra]

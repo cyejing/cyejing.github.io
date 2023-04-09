@@ -59,6 +59,11 @@ extra_syntaxes = []
 # Optional translation object. The key if present should be a language code
 [translations]
 
+# Configuration of the Markdown rendering
+[markdown]
+# When set to "true", all code blocks are highlighted.
+highlight_code = true
+
 # You can put any kind of data in there and it
 # will be accessible in all templates
 [extra]

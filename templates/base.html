@@ -104,10 +104,6 @@
     <!-- clipboard -->
     {% endif %}
     <!-- highlightjs -->
-    {% if not config.extra.highlightjs.enable %}
-    <script src="{{get_url(path='js/copy.js')}}"></script>
-    {% endif %}
-    <script src="{{get_url(path='js/main.js')}}"></script>
 
     {% block js_footer %} {% endblock js_footer %}
     <!-- analytics -->
