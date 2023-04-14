@@ -8,7 +8,7 @@
     <meta itemprop="name" content="{{config.title}}" />
     <meta itemprop="description" content="{{config.description}}" />
 
-    <link rel="stylesheet" href="{{get_url(path='style.css')}}" />
+    <link rel="stylesheet" href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/style.css" />
     {% if page.title %}
     <title>{{page.title}}</title>
     {% else %}
@@ -75,16 +75,18 @@
       {% endblock footer %}
     </div>
 
-    <script src="{{get_url(path='js/main.js')}}"></script>
+    <!-- <script src="{{get_url(path='js/main.js')}}"></script> -->
+    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/main.js"></script>
 
     {% if config.extra.highlightjs.enable %}
-    <link
-      href="https://unpkg.com/highlightjs-badge/highlightjs/styles/{{config.extra.highlightjs.theme}}.css"
-      rel="stylesheet"
-    />
+    <!-- <link -->
+    <!--   href="https://unpkg.com/highlightjs-badge/highlightjs/styles/{{config.extra.highlightjs.theme}}.css" -->
+    <!--   rel="stylesheet" -->
+    <!-- /> -->
+    <link href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/railscasts.css" rel="stylesheet" />
     <!-- https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.1.1/build/styles/  for min version -->
-    <script src="https://unpkg.com/highlightjs-badge/highlightjs/highlight.pack.js"></script>
-    <script src="https://unpkg.com/highlightjs-badge/highlightjs-badge.min.js"></script>
+    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/highlight.pack.js"></script>
+    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/highlightjs-badge.min.js"></script>
     <script>
       var pres = document.querySelectorAll('pre>code')
       for (var i = 0; i < pres.length; i++) {
@@ -92,7 +94,7 @@
       }
     </script>
     {% if config.extra.highlightjs.clipboard %}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/clipboard.min.js"></script>
     <script>
       var options = {
         copyIconClass: 'gg-clipboard',
