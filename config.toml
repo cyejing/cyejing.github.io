@@ -110,7 +110,7 @@ name = "Cyejing"
 email = "jing23501@qq.com"
 
 [extra.google_analytics]
-enable = true
+enable = false
 id = "G-M5C0GNDPW2"
 
 [extra.baidu_tongji]
