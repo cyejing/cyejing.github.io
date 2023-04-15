@@ -16,13 +16,13 @@
           <guid>https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/</guid>
           <description>&lt;h3 id=&quot;qi-yin&quot;&gt;起因&lt;&#x2F;h3&gt;
 &lt;p&gt;Github Page 虽然好用，但是国内访问速度总是缓慢。&lt;&#x2F;p&gt;
-&lt;p&gt;于是打算和github action配合把构建好的静态页面部署到服务器nginx下。&lt;&#x2F;p&gt;
+&lt;p&gt;于是打算和github action配合把构建好的静态页面部署到服务器nginx。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;pei-zhi&quot;&gt;配置&lt;&#x2F;h3&gt;
 &lt;h4 id=&quot;pei-zhi-github&quot;&gt;配置github&lt;&#x2F;h4&gt;
 &lt;p&gt;github 项目配置页面设置webhook地址。&lt;&#x2F;p&gt;
 &lt;p&gt;可以选择在只有push事件的时候触发webhook&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;pei-zhi-fu-wu-qi&quot;&gt;配置服务器&lt;&#x2F;h4&gt;
-&lt;p&gt;我采用这个rust写web服务 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cyejing&#x2F;github-webhook-server&quot;&gt;source&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;我采用这个rust写web服务 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cyejing&#x2F;github-webhook-server&quot;&gt;源码地址&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;通过配置文件，可以暴露出web接口。&lt;&#x2F;p&gt;
 &lt;p&gt;当webhook触发，会对比触发的项目和配置的项目，以及配置的事件类型。&lt;&#x2F;p&gt;
 &lt;p&gt;当匹配成功会在&lt;code&gt;repo_directory&lt;&#x2F;code&gt;目录执行git更新，并且在&lt;code&gt;working_directory&lt;&#x2F;code&gt;执行&lt;code&gt;command&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;

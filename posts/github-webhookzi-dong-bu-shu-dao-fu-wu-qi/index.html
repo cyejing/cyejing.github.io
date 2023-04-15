@@ -181,13 +181,13 @@
         
 	  <h3 id="qi-yin">起因</h3>
 <p>Github Page 虽然好用，但是国内访问速度总是缓慢。</p>
-<p>于是打算和github action配合把构建好的静态页面部署到服务器nginx下。</p>
+<p>于是打算和github action配合把构建好的静态页面部署到服务器nginx。</p>
 <h3 id="pei-zhi">配置</h3>
 <h4 id="pei-zhi-github">配置github</h4>
 <p>github 项目配置页面设置webhook地址。</p>
 <p>可以选择在只有push事件的时候触发webhook</p>
 <h4 id="pei-zhi-fu-wu-qi">配置服务器</h4>
-<p>我采用这个rust写web服务 <a href="https://github.com/cyejing/github-webhook-server">source</a></p>
+<p>我采用这个rust写web服务 <a href="https://github.com/cyejing/github-webhook-server">源码地址</a></p>
 <p>通过配置文件，可以暴露出web接口。</p>
 <p>当webhook触发，会对比触发的项目和配置的项目，以及配置的事件类型。</p>
 <p>当匹配成功会在<code>repo_directory</code>目录执行git更新，并且在<code>working_directory</code>执行<code>command</code>。</p>
@@ -228,7 +228,7 @@
 		
     </p>
     
-    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>253 Words</p>
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>255 Words</p>
     
     <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2023-04-15</p>
     
@@ -315,8 +315,13 @@
     &#183;
     
     <a href="https:&#x2F;&#x2F;cyejing.cn"><b>Cyejing</b></a>
-    &#183;
-    <a href="#site-header"><b>Top</b></a>
+    
+        &#183;
+        <a href="https://cyejing.cn/posts"><b>Posts</b></a>
+    
+        &#183;
+        <a href="https://cyejing.cn/tags"><b>Tags</b></a>
+    
   </p>
 </footer>
 
