@@ -11,7 +11,7 @@ toc=true
 ### 起因
 Github Page 虽然好用，但是国内访问速度总是缓慢。
 
-于是打算和github action配合把构建好的静态页面部署到服务器nginx下。
+于是打算和github action配合把构建好的静态页面部署到服务器nginx。
 
 ### 配置
 
@@ -23,7 +23,7 @@ github 项目配置页面设置webhook地址。
 
 #### 配置服务器
 
-我采用这个rust写web服务 [source](https://github.com/cyejing/github-webhook-server)
+我采用这个rust写web服务 [源码地址](https://github.com/cyejing/github-webhook-server)
 
 通过配置文件，可以暴露出web接口。
 

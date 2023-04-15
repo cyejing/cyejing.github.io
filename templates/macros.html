@@ -32,8 +32,10 @@
     &#183;
     {% endif %}
     <a href="{{ config.base_url }}"><b>{{ config.extra.author.name }}</b></a>
-    &#183;
-    <a href="#site-header"><b>Top</b></a>
+    {% for menu_item in config.extra.hermit_menu %}
+        &#183;
+        <a href="{{ config.base_url ~ menu_item.link }}"><b>{{ menu_item.name }}</b></a>
+    {% endfor %}
   </p>
 </footer>
 
