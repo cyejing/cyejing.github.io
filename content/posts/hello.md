@@ -17,7 +17,7 @@ toc=true
 
 采用Rust 编写的Zola工具 生成静态模板。
 
-采用Hermit_Zola主题，首页做了一些改动
+基于Hermit_Zola主题，样式做了一些改动
 
 ### 致谢
 
