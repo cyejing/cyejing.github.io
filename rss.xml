@@ -53,7 +53,7 @@
 &lt;p&gt;博客刚刚搭建完毕，虽然我不怎么爱写博客，留着占个位吧。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;bo-ke-gong-ju&quot;&gt;博客工具&lt;&#x2F;h3&gt;
 &lt;p&gt;采用Rust 编写的Zola工具 生成静态模板。&lt;&#x2F;p&gt;
-&lt;p&gt;采用Hermit_Zola主题，首页做了一些改动&lt;&#x2F;p&gt;
+&lt;p&gt;基于Hermit_Zola主题，样式做了一些改动&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;zhi-xie&quot;&gt;致谢&lt;&#x2F;h3&gt;
 &lt;p&gt;感谢我的妻子和可爱的女儿&lt;&#x2F;p&gt;
 </description>
