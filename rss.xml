@@ -17,7 +17,30 @@
           <description>&lt;h3 id=&quot;qi-yin&quot;&gt;起因&lt;&#x2F;h3&gt;
 &lt;p&gt;Github Page 虽然好用，但是国内访问速度总是缓慢。&lt;&#x2F;p&gt;
 &lt;p&gt;于是打算和github action配合把构建好的静态页面部署到服务器nginx下。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;zhun-bei&quot;&gt;准备&lt;&#x2F;h3&gt;
+&lt;h3 id=&quot;pei-zhi&quot;&gt;配置&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;pei-zhi-github&quot;&gt;配置github&lt;&#x2F;h4&gt;
+&lt;p&gt;github 项目配置页面设置webhook地址。&lt;&#x2F;p&gt;
+&lt;p&gt;可以选择在只有push事件的时候触发webhook&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pei-zhi-fu-wu-qi&quot;&gt;配置服务器&lt;&#x2F;h4&gt;
+&lt;p&gt;我采用这个rust写web服务 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;cyejing&#x2F;github-webhook-server&quot;&gt;source&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;通过配置文件，可以暴露出web接口。&lt;&#x2F;p&gt;
+&lt;p&gt;当webhook触发，会对比触发的项目和配置的项目，以及配置的事件类型。&lt;&#x2F;p&gt;
+&lt;p&gt;当匹配成功会在&lt;code&gt;repo_directory&lt;&#x2F;code&gt;目录执行git更新，并且在&lt;code&gt;working_directory&lt;&#x2F;code&gt;执行&lt;code&gt;command&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pei-zhi-nginx&quot;&gt;配置nginx&lt;&#x2F;h4&gt;
+&lt;p&gt;nginx配置映射&lt;code&gt;repo_directory&lt;&#x2F;code&gt;目录的静态文件。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zong-jie&quot;&gt;总结&lt;&#x2F;h3&gt;
+&lt;p&gt;整个流程如下：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;当提交代码时会触发github-aciton, 并且构建出静态页面推送到&lt;code&gt;gh-pages&lt;&#x2F;code&gt;分支。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;当&lt;code&gt;gh-pages&lt;&#x2F;code&gt;分支受到推送事件会触发webhook到服务器。&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;服务器执行git更新，静态页面服务nginx得到更新&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
 </description>
       </item>
       <item>
@@ -33,6 +56,79 @@
 &lt;p&gt;采用Hermit_Zola主题，首页做了一些改动&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;zhi-xie&quot;&gt;致谢&lt;&#x2F;h3&gt;
 &lt;p&gt;感谢我的妻子和可爱的女儿&lt;&#x2F;p&gt;
+</description>
+      </item>
+      <item>
+          <title>template</title>
+          <pubDate>Sat, 29 Sep 2018 11:36:33 +0800</pubDate>
+          <author>Unknown</author>
+          <link>https://cyejing.cn/posts/template/</link>
+          <guid>https://cyejing.cn/posts/template/</guid>
+          <description>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#1&quot;&gt;1&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;An apple is a sweet, edible fruit produced by an apple tree (Malus pumila). Apple trees are cultivated worldwide, and are the most widely grown species in the genus Malus. The tree originated in Central Asia, where its wild ancestor, Malus sieversii, is still found today. Apples have been grown for thousands of years in Asia and Europe, and were brought to North America by European colonists. Apples have religious and mythological significance in many cultures, including Norse, Greek and European Christian traditions.&lt;sup class=&quot;footnote-reference&quot;&gt;&lt;a href=&quot;#2&quot;&gt;2&lt;&#x2F;a&gt;&lt;&#x2F;sup&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;Inline styles：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;strong&lt;&#x2F;strong&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;emphasis&lt;&#x2F;em&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;strong and emphasis&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;code&lt;&#x2F;code&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;u&gt;underline&lt;&#x2F;u&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;del&gt;strikethrough&lt;&#x2F;del&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;:joy:🤣,&lt;&#x2F;p&gt;
+&lt;p&gt;$\LaTeX$, X^2^, H~2~O,&lt;&#x2F;p&gt;
+&lt;p&gt;==highlight==,&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;example.com&quot;&gt;Link&lt;&#x2F;a&gt;,&lt;&#x2F;p&gt;
+&lt;p&gt;and image:&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;picsum.photos&#x2F;600&#x2F;400&#x2F;?random&quot; alt=&quot;img&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;Headings:&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;heading-1&quot;&gt;Heading 1&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;heading-2&quot;&gt;Heading 2&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;heading-3&quot;&gt;Heading 3&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;heading-4&quot;&gt;Heading 4&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;heading-5&quot;&gt;Heading 5&lt;&#x2F;h5&gt;
+&lt;h6 id=&quot;heading-6&quot;&gt;Heading 6&lt;&#x2F;h6&gt;
+&lt;p&gt;Table:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;text-align: left&quot;&gt;Left-Aligned&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: center&quot;&gt;Center Aligned&lt;&#x2F;th&gt;&lt;th style=&quot;text-align: right&quot;&gt;Right Aligned&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;col 3 is&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;some wordy text&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: right&quot;&gt;$1600&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;col 2 is&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;centered&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: right&quot;&gt;$12&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td style=&quot;text-align: left&quot;&gt;zebra stripes&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: center&quot;&gt;are neat&lt;&#x2F;td&gt;&lt;td style=&quot;text-align: right&quot;&gt;$1&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;Lists:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Unordered list item 1.&lt;&#x2F;li&gt;
+&lt;li&gt;Unordered list item 2.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;ol&gt;
+&lt;li&gt;ordered list item 1.&lt;&#x2F;li&gt;
+&lt;li&gt;ordered list item 2.
+&lt;ul&gt;
+&lt;li&gt;sub-unordered list item 1.&lt;&#x2F;li&gt;
+&lt;li&gt;sub-unordered list item 2.
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled=&quot;&quot; type=&quot;checkbox&quot; checked=&quot;&quot;&#x2F;&gt;
+something is DONE.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;input disabled=&quot;&quot; type=&quot;checkbox&quot;&#x2F;&gt;
+something is NOT DONE.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;Syntax Highlighting:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;javascript&quot; style=&quot;background-color:#2e3440;color:#d8dee9;&quot; class=&quot;language-javascript &quot;&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#d8dee9;&quot;&gt;num1 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#88c0d0;&quot;&gt;prompt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;quot;Enter first number&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eceff4;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#d8dee9;&quot;&gt;num2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#88c0d0;&quot;&gt;prompt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;quot;Enter second number&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eceff4;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;font-weight:bold;color:#d8dee9;&quot;&gt;sum &lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#88c0d0;&quot;&gt;parseInt&lt;&#x2F;span&gt;&lt;span&gt;(num1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eceff4;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#88c0d0;&quot;&gt;parseInt&lt;&#x2F;span&gt;&lt;span&gt;(num2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eceff4;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eceff4;&quot;&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#616e88;&quot;&gt;&#x2F;&#x2F; &amp;quot;+&amp;quot; means &amp;quot;add&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#88c0d0;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&amp;quot;Sum = &amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#81a1c1;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span&gt;sum)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#eceff4;&quot;&gt;;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#616e88;&quot;&gt;&#x2F;&#x2F; &amp;quot;+&amp;quot; means combine into a string
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;1&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;1&lt;&#x2F;sup&gt;
+&lt;p&gt;From &lt;a href=&quot;https:&#x2F;&#x2F;www.lipsum.com&#x2F;&quot;&gt;https:&#x2F;&#x2F;www.lipsum.com&#x2F;&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
+&lt;div class=&quot;footnote-definition&quot; id=&quot;2&quot;&gt;&lt;sup class=&quot;footnote-definition-label&quot;&gt;2&lt;&#x2F;sup&gt;
+&lt;p&gt;From &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Apple&quot;&gt;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Apple&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;&#x2F;div&gt;
 </description>
       </item>
     </channel>

@@ -10,7 +10,7 @@
     <!-- <link rel="stylesheet" href="https://cyejing.cn/style.css" /> -->
     <link rel="stylesheet" href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/style.css" />
     
-    <title>Github-Webhook自动部署到服务器</title>
+    <title>template</title>
     
     <!-- feed -->
     
@@ -151,7 +151,7 @@
 	<header class="post-header">
 	  <div class="post-meta">
 		
-		<span>Apr 15, 2023</span>
+		<span>Sep 29, 2018</span>
 		<small> - 
 <span class="reading-time" title="Estimated read time">
    1 min read 
@@ -174,38 +174,76 @@
             </button>
 		    
 	  </div>
-	  <h1>Github-Webhook自动部署到服务器</h1>
+	  <h1>template</h1>
 	</header>
 
 	<div class="content">
         
-	  <h3 id="qi-yin">起因</h3>
-<p>Github Page 虽然好用，但是国内访问速度总是缓慢。</p>
-<p>于是打算和github action配合把构建好的静态页面部署到服务器nginx下。</p>
-<h3 id="pei-zhi">配置</h3>
-<h4 id="pei-zhi-github">配置github</h4>
-<p>github 项目配置页面设置webhook地址。</p>
-<p>可以选择在只有push事件的时候触发webhook</p>
-<h4 id="pei-zhi-fu-wu-qi">配置服务器</h4>
-<p>我采用这个rust写web服务 <a href="https://github.com/cyejing/github-webhook-server">source</a></p>
-<p>通过配置文件，可以暴露出web接口。</p>
-<p>当webhook触发，会对比触发的项目和配置的项目，以及配置的事件类型。</p>
-<p>当匹配成功会在<code>repo_directory</code>目录执行git更新，并且在<code>working_directory</code>执行<code>command</code>。</p>
-<h4 id="pei-zhi-nginx">配置nginx</h4>
-<p>nginx配置映射<code>repo_directory</code>目录的静态文件。</p>
-<h3 id="zong-jie">总结</h3>
-<p>整个流程如下：</p>
+	  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<sup class="footnote-reference"><a href="#1">1</a></sup></p>
+<blockquote>
+<p>An apple is a sweet, edible fruit produced by an apple tree (Malus pumila). Apple trees are cultivated worldwide, and are the most widely grown species in the genus Malus. The tree originated in Central Asia, where its wild ancestor, Malus sieversii, is still found today. Apples have been grown for thousands of years in Asia and Europe, and were brought to North America by European colonists. Apples have religious and mythological significance in many cultures, including Norse, Greek and European Christian traditions.<sup class="footnote-reference"><a href="#2">2</a></sup></p>
+</blockquote>
+<hr />
+<p>Inline styles：</p>
+<p><strong>strong</strong>,</p>
+<p><em>emphasis</em>,</p>
+<p><em><strong>strong and emphasis</strong></em>,</p>
+<p><code>code</code>,</p>
+<p><u>underline</u>,</p>
+<p><del>strikethrough</del>,</p>
+<p>:joy:🤣,</p>
+<p>$\LaTeX$, X^2^, H~2~O,</p>
+<p>==highlight==,</p>
+<p><a href="https://example.com">Link</a>,</p>
+<p>and image:</p>
+<p><img src="https://picsum.photos/600/400/?random" alt="img" /></p>
+<hr />
+<p>Headings:</p>
+<h1 id="heading-1">Heading 1</h1>
+<h2 id="heading-2">Heading 2</h2>
+<h3 id="heading-3">Heading 3</h3>
+<h4 id="heading-4">Heading 4</h4>
+<h5 id="heading-5">Heading 5</h5>
+<h6 id="heading-6">Heading 6</h6>
+<p>Table:</p>
+<table><thead><tr><th style="text-align: left">Left-Aligned</th><th style="text-align: center">Center Aligned</th><th style="text-align: right">Right Aligned</th></tr></thead><tbody>
+<tr><td style="text-align: left">col 3 is</td><td style="text-align: center">some wordy text</td><td style="text-align: right">$1600</td></tr>
+<tr><td style="text-align: left">col 2 is</td><td style="text-align: center">centered</td><td style="text-align: right">$12</td></tr>
+<tr><td style="text-align: left">zebra stripes</td><td style="text-align: center">are neat</td><td style="text-align: right">$1</td></tr>
+</tbody></table>
+<p>Lists:</p>
 <ul>
-<li>
-<p>当提交代码时会触发github-aciton, 并且构建出静态页面推送到<code>gh-pages</code>分支。</p>
-</li>
-<li>
-<p>当<code>gh-pages</code>分支受到推送事件会触发webhook到服务器。</p>
-</li>
-<li>
-<p>服务器执行git更新，静态页面服务nginx得到更新</p>
+<li>Unordered list item 1.</li>
+<li>Unordered list item 2.</li>
+</ul>
+<ol>
+<li>ordered list item 1.</li>
+<li>ordered list item 2.
+<ul>
+<li>sub-unordered list item 1.</li>
+<li>sub-unordered list item 2.
+<ul>
+<li><input disabled="" type="checkbox" checked=""/>
+something is DONE.</li>
+<li><input disabled="" type="checkbox"/>
+something is NOT DONE.</li>
+</ul>
 </li>
 </ul>
+</li>
+</ol>
+<p>Syntax Highlighting:</p>
+<pre data-lang="javascript" style="background-color:#2e3440;color:#d8dee9;" class="language-javascript "><code class="language-javascript" data-lang="javascript"><span style="color:#81a1c1;">const </span><span style="font-weight:bold;color:#d8dee9;">num1 </span><span style="color:#81a1c1;">= </span><span style="color:#88c0d0;">prompt</span><span>(</span><span style="color:#a3be8c;">&quot;Enter first number&quot;</span><span>)</span><span style="color:#eceff4;">;
+</span><span style="color:#81a1c1;">const </span><span style="font-weight:bold;color:#d8dee9;">num2 </span><span style="color:#81a1c1;">= </span><span style="color:#88c0d0;">prompt</span><span>(</span><span style="color:#a3be8c;">&quot;Enter second number&quot;</span><span>)</span><span style="color:#eceff4;">;
+</span><span style="color:#81a1c1;">const </span><span style="font-weight:bold;color:#d8dee9;">sum </span><span style="color:#81a1c1;">= </span><span style="color:#88c0d0;">parseInt</span><span>(num1</span><span style="color:#eceff4;">, </span><span style="color:#b48ead;">10</span><span>) </span><span style="color:#81a1c1;">+ </span><span style="color:#88c0d0;">parseInt</span><span>(num2</span><span style="color:#eceff4;">, </span><span style="color:#b48ead;">10</span><span>)</span><span style="color:#eceff4;">; </span><span style="color:#616e88;">// &quot;+&quot; means &quot;add&quot;
+</span><span style="color:#88c0d0;">alert</span><span>(</span><span style="color:#a3be8c;">&quot;Sum = &quot; </span><span style="color:#81a1c1;">+ </span><span>sum)</span><span style="color:#eceff4;">;  </span><span style="color:#616e88;">// &quot;+&quot; means combine into a string
+</span></code></pre>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>From <a href="https://www.lipsum.com/">https://www.lipsum.com/</a></p>
+</div>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p>From <a href="https://en.wikipedia.org/wiki/Apple">https://en.wikipedia.org/wiki/Apple</a></p>
+</div>
 
 	</div>
 	<hr class="post-end">
@@ -215,22 +253,16 @@
 		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
 		
 		
-		<span class="tag"><a href="https://cyejing.cn/tags/github/">github</a></span>
+		<span class="tag"><a href="https://cyejing.cn/tags/test/">test</a></span>
 		
-		<span class="tag"><a href="https://cyejing.cn/tags/webhook/">webhook</a></span>
-		
-		<span class="tag"><a href="https://cyejing.cn/tags/rust/">rust</a></span>
-		
-		<span class="tag"><a href="https://cyejing.cn/tags/html/">html</a></span>
-		
-		<span class="tag"><a href="https://cyejing.cn/tags/deploy/">deploy</a></span>
+		<span class="tag"><a href="https://cyejing.cn/tags/original-post/">original_post</a></span>
 		
 		
     </p>
     
-    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>253 Words</p>
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>308 Words</p>
     
-    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2023-04-15</p>
+    <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>2018-09-29T11:36:33+08:00</p>
     
 	</footer>
   </article>
@@ -241,33 +273,15 @@
             <ul>
                 
                 <li>
-                    <a href="https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/#qi-yin">起因</a>
-                    
-                </li>
-                
-                <li>
-                    <a href="https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/#pei-zhi">配置</a>
+                    <a href="https://cyejing.cn/posts/template/#heading-1">Heading 1</a>
                     
                     <ul>
                         
                         <li>
-                            <a href="https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/#pei-zhi-github">配置github</a>
-                        </li>
-                        
-                        <li>
-                            <a href="https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/#pei-zhi-fu-wu-qi">配置服务器</a>
-                        </li>
-                        
-                        <li>
-                            <a href="https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/#pei-zhi-nginx">配置nginx</a>
+                            <a href="https://cyejing.cn/posts/template/#heading-2">Heading 2</a>
                         </li>
                         
                     </ul>
-                    
-                </li>
-                
-                <li>
-                    <a href="https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/#zong-jie">总结</a>
                     
                 </li>
                 
