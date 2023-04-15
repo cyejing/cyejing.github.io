@@ -116,3 +116,6 @@ id = "G-M5C0GNDPW2"
 [extra.baidu_tongji]
 enable = true
 token = "51b9973e857f6178a51023ab6b40b6ee"
+
+[extra.te_rum.enable]
+enable = true
