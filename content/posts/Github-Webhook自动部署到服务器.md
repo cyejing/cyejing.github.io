@@ -9,7 +9,9 @@ toc=true
 +++
 
 ### 起因
-Github Page 虽然好用，但是国内访问速度总是缓慢，于是打算和github action配合把构建好的静态页面部署到服务器nginx下。
+Github Page 虽然好用，但是国内访问速度总是缓慢。
+
+于是打算和github action配合把构建好的静态页面部署到服务器nginx下。
 
 ### 准备
 
