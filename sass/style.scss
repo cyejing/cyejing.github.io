@@ -4,6 +4,7 @@
 @import 'syntax.scss';
 @import 'animate.scss';
 @import 'icons.scss';
+@import 'rubik-font.scss';
 
 /* Webkit Scrollbar Customize */
 ::-webkit-scrollbar {
@@ -22,8 +23,8 @@
 
 html {
   background: $light-grey;
-  line-height: 1.6;
-  letter-spacing: 0.06em;
+  line-height: 31px;
+  // letter-spacing: 0.05em;
   // font-size: 1.3em;
 }
 
@@ -34,7 +35,7 @@ select,
 textarea {
   color: $text;
   font-family: $fonts;
-  font-size: calc(16px + 0.3vw);
+  font-size: 21px;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -141,8 +142,12 @@ table {
   width: 93%;
 }
 
+.site-main {
+  width: 100%;
+}
+
 .thin {
-  max-width: 720px;
+  max-width: 790px;
   margin: auto;
 }
 
@@ -496,7 +501,6 @@ hr.post-end {
 .content {
   // text-align: justify;
   text-justify: inter-ideograph; //For IE/Edge
-  padding-right: 100px;
 
   @include aTag;
 
@@ -535,6 +539,10 @@ hr.post-end {
     height: auto;
     margin: auto;
     border-radius: 4px;
+  }
+
+  p {
+    margin-top: 0;
   }
 
   ul,
@@ -688,7 +696,7 @@ hr.post-end {
     width: 40%;
   }
   .content {
-    padding-right: 50px;
+    padding-right: 0px;
   }
 }
 
@@ -697,7 +705,7 @@ hr.post-end {
     margin-top: 2em;
   }
   .content {
-    padding-right: 50px;
+    padding-right: 0px;
   }
 }
 
@@ -740,11 +748,11 @@ hr.post-end {
 
   #toc {
     top: 13em;
-    margin-left: 370px;
+    margin-left: 450px;
     max-width: 220px;
   }
   .content {
-    padding-right: 100px;
+    padding-right: 0px;
   }
 }
 
@@ -786,17 +794,18 @@ hr.post-end {
     max-width: 300px;
   }
   .content {
-    padding-right: 100px;
+    padding-right: 170px;
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 840px) {
   .hide-in-mobile,
   .site-nav.hide-in-mobile {
     display: none;
   }
   .site-main {
     margin-top: 1em;
+    width: 90%;
   }
   #menu-btn {
     display: inline-block;
@@ -832,6 +841,7 @@ hr.post-end {
   }
   .site-main {
     margin-top: 1em;
+    width: 90%;
   }
   hr.post-end {
     width: 60%;
