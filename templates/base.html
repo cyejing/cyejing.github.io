@@ -8,6 +8,7 @@
     <meta itemprop="name" content="{{config.title}}" />
     <meta itemprop="description" content="{{config.description}}" />
 
+    <!-- <link rel="stylesheet" href="{{get_url(path='style.css')}}" /> -->
     <link rel="stylesheet" href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/style.css" />
     {% if page.title %}
     <title>{{page.title}}</title>
@@ -79,26 +80,15 @@
     <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/main.js"></script>
 
     {% if config.extra.highlightjs.enable %}
-    <link href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/railscasts.css" rel="stylesheet" />
-    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/highlight.pack.js"></script>
-    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/highlightjs-badge.min.js"></script>
+    <link
+      href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/nord.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/highlight.min.js"></script>
     <script>
-      var pres = document.querySelectorAll('pre>code')
-      for (var i = 0; i < pres.length; i++) {
-        hljs.highlightBlock(pres[i])
-      }
+      hljs.highlightAll()
     </script>
-    {% if config.extra.highlightjs.clipboard %}
-    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/clipboard.min.js"></script>
-    <script>
-      var options = {
-        copyIconClass: 'gg-clipboard',
-        checkIconClass: 'gg-check'
-      }
-      window.highlightJsBadge(options)
-    </script>
-    {% endif %}
-    <!-- clipboard -->
     {% endif %}
     <!-- highlightjs -->
 

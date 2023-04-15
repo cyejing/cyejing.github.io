@@ -9,10 +9,8 @@
 
 <footer id="site-footer" class="section-inner thin animated fadeIn faster">
   <p>
-    &copy; {{ now() | date(format="%Y") }} <a href="{{ config.base_url }}">{{ config.extra.author.name }}</a>{{
-    config.extra.footer_copyright | safe }}
-    <!-- </p> -->
-    <!-- <p> Made with <a href="https://www.getzola.org" target="_blank" rel="noopener">Zola</a> &#183; Theme <a href="https://github.com/VersBinarii/hermit_zola" target="_blank" rel="noopener">Hermit_Zola</a> -->
+    &copy; {{ now() | date(format="%Y") }} 
+        {{ config.extra.footer_copyright | safe }}
     {% if config.generate_feed %} &#183;
     <a href="{{ get_url(path=config.feed_filename, trailing_slash=false) }}" target="_blank" title="rss"
       ><svg
@@ -31,7 +29,11 @@
         <path d="M4 4a16 16 0 0 1 16 16"></path>
         <circle cx="5" cy="19" r="1"></circle></svg
     ></a>
+    &#183;
     {% endif %}
+    <a href="{{ config.base_url }}"><b>{{ config.extra.author.name }}</b></a>
+    &#183;
+    <a href="#site-header"><b>Top</b></a>
   </p>
 </footer>
 

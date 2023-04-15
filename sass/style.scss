@@ -1,8 +1,9 @@
-@import "predefined.scss";
-@import "normalize.scss";
-@import "syntax.scss";
-@import "animate.scss";
-@import "icons.scss";
+@import 'nord.scss';
+@import 'predefined.scss';
+@import 'normalize.scss';
+@import 'syntax.scss';
+@import 'animate.scss';
+@import 'icons.scss';
 
 /* Webkit Scrollbar Customize */
 ::-webkit-scrollbar {
@@ -23,6 +24,7 @@ html {
   background: $light-grey;
   line-height: 1.6;
   letter-spacing: 0.06em;
+  // font-size: 1.3em;
 }
 
 body,
@@ -32,6 +34,8 @@ select,
 textarea {
   color: $text;
   font-family: $fonts;
+  font-size: calc(16px + 0.3vw);
+  -webkit-font-smoothing: antialiased;
 }
 
 pre,
@@ -42,7 +46,7 @@ pre tt {
 
 pre {
   max-height: 40em;
-  padding: 0.7em 1.1em;
+  padding: 0.5em 0.5em;
   overflow: auto;
   font-size: 0.9em;
   line-height: 1.5;
@@ -61,8 +65,8 @@ pre {
 }
 
 code {
-  color: #eee;
-  background: $highlight-grey;
+  color: $code-color;
+  background: $midnightblue;
   border-radius: 3px;
   padding: 0 3px;
   margin: 0 4px;
@@ -81,7 +85,7 @@ blockquote {
     font-style: normal;
 
     &::before {
-      content: "—— ";
+      content: '—— ';
     }
   }
 }
@@ -193,12 +197,12 @@ table {
 // Header & Footer
 //
 #site-header {
-  position: fixed;
-  z-index: 1;
+  // position: fixed;
+  // z-index: 1;
   bottom: 0;
   width: 100%;
   box-sizing: border-box;
-  box-shadow: -1px -2px 3px rgba(0, 0, 0, 0.45);
+  box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
   background-color: $dark-grey;
 }
 
@@ -255,13 +259,13 @@ table {
 
 #mobile-menu {
   position: fixed;
-  bottom: 4.8em;
+  top: 4.2em;
   right: 1.5em;
   display: none;
   padding: 0.6em 1.8em;
   z-index: 1;
   box-sizing: border-box;
-  box-shadow: -1px -2px 3px 0px rgba(0, 0, 0, 0.45);
+  box-shadow: 1px 2px 3px 0px rgba(0, 0, 0, 0.3);
   background-color: $dark-grey;
 
   ul {
@@ -275,7 +279,7 @@ table {
 
 #site-footer {
   text-align: center;
-  font-size: 0.9em;
+  font-size: 0.8em;
   margin-bottom: 96px;
   margin-top: 64px;
 
@@ -490,8 +494,9 @@ hr.post-end {
 }
 
 .content {
-  text-align: justify;
+  // text-align: justify;
   text-justify: inter-ideograph; //For IE/Edge
+  padding-right: 100px;
 
   @include aTag;
 
@@ -537,6 +542,16 @@ hr.post-end {
     padding: 0;
     margin-left: 1.8em;
   }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  h7,
+  h8 {
+    color: $content-h;
+  }
 }
 
 .footnote-definition {
@@ -573,7 +588,7 @@ hr.post-end {
 }
 
 .post-info {
-  font-size: 0.8rem;
+  font-size: 0.7em;
   line-height: normal;
   @include dimmed;
 
@@ -593,7 +608,7 @@ hr.post-end {
     margin-right: 0.5em;
 
     &::before {
-      content: "#";
+      content: '#';
     }
   }
 }
@@ -666,23 +681,29 @@ hr.post-end {
 //
 @media (min-width: 800px) {
   .site-main {
-    margin-top: 3em;
+    margin-top: 2em;
   }
 
   hr.post-end {
     width: 40%;
   }
+  .content {
+    padding-right: 50px;
+  }
 }
 
 @media (min-width: 960px) {
   .site-main {
-    margin-top: 6em;
+    margin-top: 2em;
+  }
+  .content {
+    padding-right: 50px;
   }
 }
 
 @media (min-width: 1300px) {
   .site-main {
-    margin-top: 8em;
+    margin-top: 4em;
   }
 
   .desktop-only,
@@ -722,11 +743,14 @@ hr.post-end {
     margin-left: 370px;
     max-width: 220px;
   }
+  .content {
+    padding-right: 100px;
+  }
 }
 
 @media (min-width: 1800px) {
   .site-main {
-    margin-top: 10em;
+    margin-top: 4em;
   }
 
   .section-inner {
@@ -761,6 +785,9 @@ hr.post-end {
     margin-left: 490px;
     max-width: 300px;
   }
+  .content {
+    padding-right: 100px;
+  }
 }
 
 @media (max-width: 760px) {
@@ -768,7 +795,9 @@ hr.post-end {
   .site-nav.hide-in-mobile {
     display: none;
   }
-
+  .site-main {
+    margin-top: 1em;
+  }
   #menu-btn {
     display: inline-block;
   }
@@ -789,6 +818,9 @@ hr.post-end {
       margin: 0;
     }
   }
+  .content {
+    padding-right: 0;
+  }
 }
 
 @media (max-width: 520px) {
@@ -798,13 +830,18 @@ hr.post-end {
     max-width: 100%;
     margin: 0;
   }
-
+  .site-main {
+    margin-top: 1em;
+  }
   hr.post-end {
     width: 60%;
   }
 
   #mobile-menu {
     right: 1.2em;
+  }
+  .content {
+    padding-right: 0;
   }
 }
 

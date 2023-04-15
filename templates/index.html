@@ -17,17 +17,22 @@
     {% endif %}
     <style>
         html {
-            background: #494f5c;
+            background: #3b4252;
+            color: #eceff4;
             line-height: 1.6;
             letter-spacing: 0.06em;
+        }
+
+        html a {
+            color: #eceff4;
         }
 
         body {
             font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
                 'Open Sans', 'Helvetica Neue', sans-serif;
-            font-size: calc(10px + 0.33vw);
+            font-size: calc(12px + 0.33vw);
+            /* font-size: calc(16px + 0.30vw); */
             -webkit-font-smoothing: antialiased;
-            color: #c6cddb;
             padding: 0;
             margin: 0;
         }
@@ -47,7 +52,6 @@
         }
 
         a {
-            color: #c6cddb;
             text-decoration: none;
             border: none;
             transition-property: color;
@@ -96,7 +100,7 @@
             margin: 0 15vw;
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 720px) {
             .info {
                 justify-content: center;
                 margin-bottom: 0;
@@ -104,7 +108,7 @@
             }
 
             .wrap {
-                margin: 0 10vw;
+                margin: 0 5vw;
             }
 
         }

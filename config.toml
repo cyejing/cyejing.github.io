@@ -10,13 +10,6 @@ default_language = "en"
 # Theme name to use
 # theme = "hermit_zola"
 
-# Highlight all code blocks found
-# Or enable the highlight.js in the 'extra' config section
-highlight_code = true
-
-# Which theme to use for the code highlighting.
-# See below for list of accepted values
-highlight_theme = "agola-dark"
 
 # Whether to generate a RSS feed automatically
 generate_feed = true
@@ -62,7 +55,13 @@ extra_syntaxes = []
 # Configuration of the Markdown rendering
 [markdown]
 # When set to "true", all code blocks are highlighted.
+# Highlight all code blocks found
+# Or enable the highlight.js in the 'extra' config section
 highlight_code = true
+
+# Which theme to use for the code highlighting.
+# See below for list of accepted values
+highlight_theme = "nord"
 
 # You can put any kind of data in there and it
 # will be accessible in all templates
@@ -91,8 +90,9 @@ hermit_social = [
 # default one
 [extra.highlightjs]
 enable = true
-clipboard = true
-theme = "railscasts"
+clipboard = false
+# theme = "railscasts"
+theme = "nord"
 
 [extra.disqus]
 enable = false
