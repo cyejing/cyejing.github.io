@@ -10,6 +10,10 @@
         <loc>https://cyejing.cn/posts/</loc>
     </url>
     <url>
+        <loc>https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/</loc>
+        <lastmod>2023-04-15</lastmod>
+    </url>
+    <url>
         <loc>https://cyejing.cn/posts/hello/</loc>
         <lastmod>2023-04-09</lastmod>
     </url>
@@ -17,6 +21,21 @@
         <loc>https://cyejing.cn/tags/</loc>
     </url>
     <url>
+        <loc>https://cyejing.cn/tags/deploy/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/github/</loc>
+    </url>
+    <url>
         <loc>https://cyejing.cn/tags/hello/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/html/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/rust/</loc>
+    </url>
+    <url>
+        <loc>https://cyejing.cn/tags/webhook/</loc>
     </url>
 </urlset>

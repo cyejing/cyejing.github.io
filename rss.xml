@@ -7,7 +7,18 @@
       <generator>Zola</generator>
       <language>en</language>
       <atom:link href="https://cyejing.cn/rss.xml" rel="self" type="application/rss+xml"/>
-      <lastBuildDate>Sun, 09 Apr 2023 00:00:00 +0000</lastBuildDate>
+      <lastBuildDate>Sat, 15 Apr 2023 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Github-Webhook自动部署到服务器</title>
+          <pubDate>Sat, 15 Apr 2023 00:00:00 +0000</pubDate>
+          <author>Unknown</author>
+          <link>https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/</link>
+          <guid>https://cyejing.cn/posts/github-webhookzi-dong-bu-shu-dao-fu-wu-qi/</guid>
+          <description>&lt;h3 id=&quot;qi-yin&quot;&gt;起因&lt;&#x2F;h3&gt;
+&lt;p&gt;Github Page 虽然好用，但是国内访问速度总是缓慢，于是打算和github action配合把构建好的静态页面部署到服务器nginx下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhun-bei&quot;&gt;准备&lt;&#x2F;h3&gt;
+</description>
+      </item>
       <item>
           <title>Hello</title>
           <pubDate>Sun, 09 Apr 2023 00:00:00 +0000</pubDate>
