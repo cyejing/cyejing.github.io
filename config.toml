@@ -12,8 +12,8 @@ default_language = "en"
 
 
 # Whether to generate a RSS feed automatically
-generate_feed = true
-feed_filename = "rss.xml"
+#generate_feed = true
+#feed_filename = "rss.xml"
 
 # The number of articles to include in the RSS feed. Will include all items if
 # not set (the default).
@@ -47,7 +47,7 @@ build_search_index = true
 ignored_content = []
 
 # A list of directories to search for additional `.sublime-syntax` files in.
-extra_syntaxes = []
+#extra_syntaxes_and_themes = []
 
 # Optional translation object. The key if present should be a language code
 [translations]

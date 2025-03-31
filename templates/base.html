@@ -11,8 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap" rel="stylesheet">
 
-    <!-- <link rel="stylesheet" href="{{get_url(path='style.css')}}" /> -->
-    <link rel="stylesheet" href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/style.css" />
+     <link rel="stylesheet" href="{{get_url(path='style.css')}}" />
 
     {% if page.title %}
     <title>{{page.title}}</title>
@@ -80,16 +79,13 @@
       {% endblock footer %}
     </div>
 
-    <!-- <script src="{{get_url(path='js/main.js')}}"></script> -->
-    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/main.js"></script>
+     <script src="{{get_url(path='js/main.js')}}"></script>
+
 
     {% if config.extra.highlightjs.enable %}
-    <link
-      href="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/nord.min.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cyejing-statics.oss-cn-shenzhen.aliyuncs.com/cyejing/highlight.min.js"></script>
+    <!-- Replace the version with any available release. -->
+    <link href="https://unpkg.com/nord-highlightjs@0.1.0/dist/nord.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js"></script>
     <script>
       hljs.highlightAll()
     </script>
